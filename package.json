@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "ts-node-dev --respawn --transpileOnly app.ts"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "cuid": "^2.1.6",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "install": "^0.13.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.3.3",
+    "morgan": "~1.9.1",
+    "npm": "^6.13.0"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^3.3.8",
+    "@types/node": "^12.12.6",
+    "nodemon": "^1.19.4",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.7.2"
+  }
+}
