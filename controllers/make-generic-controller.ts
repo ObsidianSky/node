@@ -1,9 +1,9 @@
 import { AsyncFunction } from '../types';
 
 export function makeGenericController(useCase: AsyncFunction) {
-    return async function genericController(request) {
+    return async function genericController(request, data?) {
         try {
-            const body = await useCase(request.body);
+            const body = await useCase(data || request.body);
 
             return {
                 headers: {
@@ -20,7 +20,7 @@ export function makeGenericController(useCase: AsyncFunction) {
                 },
                 statusCode: 400,
                 body: {
-                    error: e.message
+                    errorMessage: e.message
                 }
             }
         }

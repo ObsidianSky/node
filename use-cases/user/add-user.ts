@@ -1,9 +1,9 @@
-import makeUser from '../entities/user';
+import makeUser from '../../entities/user';
 import { Db } from 'mongodb';
-
+import { AsyncFunction } from '../../types';
 
 export function buildAddUser(
-    detDb: () => Promise<Db>,
+    detDb: AsyncFunction<Db>,
     getSalt,
     scryptPassword: (p: string, s:string) => string
 ) {

@@ -1,6 +1,11 @@
 import cuid from 'cuid'
 
-const Id = Object.freeze({
+export interface IdService {
+    makeId: () => string,
+    isValidId: (id: string) => boolean
+}
+
+const Id: IdService = Object.freeze({
     makeId: cuid,
     isValidId: cuid.isCuid
 });

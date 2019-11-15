@@ -6,8 +6,10 @@ export default function buildMakeMessage({sanitize, Id}) {
     createdOn = Date.now(),
     modifiedOn = Date.now(),
     authorId,
+    chatId,
     deleted = false,
-    edited = false
+    edited = false,
+    forwardedFrom = null
   } = {}) {
     if (!id || !Id.isValidId(id)) {
       throw new Error('Message must have a valid id.');
@@ -17,8 +19,13 @@ export default function buildMakeMessage({sanitize, Id}) {
       throw new Error('Message must have content.');
     }
 
-    if (!authorId) {
-      throw new Error('Message must have author id.');
+    if (!authorId || !Id.isValidId(authorId)) {
+      throw new Error('Message must have valid author id.');
+    }
+
+    // if (!chatId || !Id.isValidId(chatId)) {
+    if (!chatId) {
+      throw new Error('Message must have valid chat id.');
     }
 
     const sanitizedContent = sanitize(content);
@@ -32,7 +39,7 @@ export default function buildMakeMessage({sanitize, Id}) {
       getContent: () => content,
       getAuthorId: () => authorId,
       asPlainObject: () => Object.freeze({
-        id, type, content, createdOn, modifiedOn, authorId, deleted, edited
+        id, type, content, createdOn, modifiedOn, authorId, chatId, deleted, edited
       })
     });
   }

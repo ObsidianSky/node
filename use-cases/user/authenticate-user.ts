@@ -14,6 +14,14 @@ export function buildAuthenticateUser(getDb: () => Promise<Db>, scryptPassword, 
             throwGenericAuthenticationError();
         }
 
-        return { token: signToken({ email: user.email, id: user.id})};
+        // TODO think do we need here makeUser object
+        return {
+            token: signToken({ email: user.email, id: user.id}),
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        };
     }
 }
