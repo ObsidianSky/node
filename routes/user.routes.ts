@@ -2,13 +2,14 @@ import express from 'express';
 import { postUser } from '../controllers/user';
 import { makeGenericController } from '../controllers/make-generic-controller';
 import { authenticateUser, getUserList, getUser } from '../use-cases/user';
+import buildGetUserController from '../controllers/user/get-user.controller';
 
 
 const router = express.Router();
 
 const authenticationController = makeGenericController(authenticateUser);
 const getUserListController = makeGenericController(getUserList);
-const getUserController = makeGenericController(getUser);
+const getUserController = buildGetUserController(getUser);
 
 router.post('/', async function(req, res, next) {
     const response = await postUser(req);

@@ -16,7 +16,8 @@ export function buildAuthenticateUser(getDb: () => Promise<Db>, scryptPassword, 
 
         // TODO think do we need here makeUser object
         return {
-            token: signToken({ email: user.email, id: user.id})
+            token: signToken({ email: user.email, id: user.id}),
+            id: user._id
         };
     }
 }

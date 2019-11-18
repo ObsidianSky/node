@@ -4,7 +4,8 @@ import { buildAuthenticateUser } from './authenticate-user';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { buildGetUserList } from './get-user-list';
-import { buildGetUser } from "./get-user";
+import { buildGetUser } from './get-user';
+import Id from '../../Id';
 
 const getSalt = () => {
     return crypto.randomBytes(16).toString('hex');
@@ -20,6 +21,6 @@ const signToken = (payload) => {
 
 export const addUser = buildAddUser(getDb, getSalt, scryptPassword);
 export const getUserList = buildGetUserList(getDb);
-export const getUser = buildGetUser(getDb);
+export const getUser = buildGetUser(getDb, Id);
 export const authenticateUser = buildAuthenticateUser(getDb, scryptPassword, signToken);
 
