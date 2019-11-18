@@ -1,13 +1,14 @@
 import express from 'express';
 import { postUser } from '../controllers/user';
 import { makeGenericController } from '../controllers/make-generic-controller';
-import { authenticateUser, getUserList } from '../use-cases/user';
+import { authenticateUser, getUserList, getUser } from '../use-cases/user';
 
 
 const router = express.Router();
 
 const authenticationController = makeGenericController(authenticateUser);
 const getUserListController = makeGenericController(getUserList);
+const getUserController = makeGenericController(getUser);
 
 router.post('/', async function(req, res, next) {
     const response = await postUser(req);
@@ -23,6 +24,18 @@ router.post('/', async function(req, res, next) {
 
 router.get('/', async function(req, res, next) {
     const response = await getUserListController(req);
+
+    if (response.headers) {
+        res.set(response.headers)
+    }
+    res.type('json');
+
+    res.status(response.statusCode).send(response.body)
+
+});
+
+router.get('/:userId', async function(req, res, next) {
+    const response = await getUserController(req, {userId: req.params.userId});
 
     if (response.headers) {
         res.set(response.headers)
