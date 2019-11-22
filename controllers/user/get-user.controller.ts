@@ -2,7 +2,7 @@ export default function buildGetUserController(getUser) {
     return async function getUserController(request) {
         try {
             const userId = request.params.userId;
-            const user = await getUser(userId);
+            const user = await getUser({ userId });
 
             return {
                 headers: {

@@ -12,10 +12,15 @@ export function buildAddMessage(
         const db = await getDb();
         const messagesCollection = db.collection('messages');
 
-        return await messagesCollection.insertOne({
+        const result =  await messagesCollection.insertOne({
             ...message.asPlainObject(),
             _id: message.getId()
         });
 
+        if (result.insertedCount < 1) {
+            throw Error('Something went wrong during message adding');
+        }
+
+        return message.asPlainObject();
     }
 }

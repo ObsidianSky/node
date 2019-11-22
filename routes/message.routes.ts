@@ -9,9 +9,9 @@ const router = express.Router();
 const postMessageController = makeGenericController(addMessage);
 const getMessageController = makeGenericController(getMessages);
 
-router.get('/', async function(req, res, next){
+router.get('/:chatId', async function(req, res, next){
     try {
-        const response = await getMessageController(req);
+        const response = await getMessageController(req, { chatId: req.params.chatId });
 
         if (response.headers) {
             res.set(response.headers)

@@ -2,8 +2,8 @@ import { buildAddChat } from './add-chat';
 import getDb from '../../db/get-db';
 import { buildGetChatList } from './get-chat-list';
 import Id from '../../Id';
+import { buildGetChat } from './get-chat';
 
-const addChat = buildAddChat(getDb);
-const getChatsList = buildGetChatList(getDb, Id);
-
-export { addChat, getChatsList };
+export const addChat = buildAddChat(getDb);
+export const getChatsList = buildGetChatList(getDb, Id);
+export const getChat = buildGetChat(getDb, Id);

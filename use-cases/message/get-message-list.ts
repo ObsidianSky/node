@@ -6,6 +6,35 @@ export function buildGetMessageList(getDb: AsyncFunction<Db>) {
         const db = await getDb();
         const messagesCollection = db.collection('messages');
 
-        return await messagesCollection.find({chatId: chatId}).toArray();
+        return await messagesCollection.aggregate([
+            {
+                $match: {chatId: chatId}
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    let: {authorId: "$authorId"},
+                    pipeline: [
+                        {
+                            $match:
+                                {
+                                    $expr:
+
+                                        {$eq: [ "$_id", "$$authorId" ]},
+
+
+                                }
+                        },
+                        {
+                            $project: { _id: 1, name: 1, email: 1 }
+                        }
+                    ],
+                    as: "author"
+                }
+            },
+            { $unwind : "$author" }
+        ]).toArray();
+
+        // return await messagesCollection.find({chatId: chatId}).toArray();
     }
 }

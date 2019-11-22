@@ -12,6 +12,35 @@ export function buildGetChatList(getDb: AsyncFunction<Db>, Id: IdService) {
         const db = await getDb();
         const chatCollection = db.collection('chats');
 
-        return await chatCollection.find({members: memberId}).toArray();
+        return await chatCollection.aggregate([
+            {
+                $match: {members: memberId}
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    let: {members: "$members"},
+                    pipeline: [
+                        {
+                            $match:
+                                {
+                                    $expr:
+
+                                        {$in: [ "$_id", "$$members" ]},
+
+
+                                }
+                        },
+                        {
+                            $project: { _id: 1, name: 1, email: 1 }
+                        }
+                    ],
+                    as: "author"
+                }
+            },
+            // { $unwind : "$author" }
+        ]).toArray();
+
+        // return await chatCollection.find({members: memberId}).toArray();
     }
 }

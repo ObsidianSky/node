@@ -3,7 +3,7 @@ import { Db } from 'mongodb';
 import { IdService } from '../../Id';
 
 export function buildGetUser(getDb: AsyncFunction<Db>, Id: IdService) {
-    return async function getUser(userId) {
+    return async function getUser({ userId }) {
         if (!userId || !Id.isValidId(userId)) {
             throw Error('User id is not provided or invalid.')
         }
