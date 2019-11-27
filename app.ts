@@ -57,7 +57,15 @@ io.on('connection', async (socket) => {
 
 // TODO bullshit
 async function handleChatMessage(data: {message: string, chatId: string}, user) {
-    const message = await addMessage({authorId: user.id, chatId: data.chatId, content: data.message });
+    let message;
+
+    try {
+        message = await addMessage({authorId: user.id, chatId: data.chatId, content: data.message });
+    } catch (e) {
+        console.error(e);
+    }
+
+    if (!message) return;
 
     const author = {
         id: user.id,
@@ -67,9 +75,7 @@ async function handleChatMessage(data: {message: string, chatId: string}, user) 
 
     const chat = await getChat({chatId: data.chatId});
 
-    console.log(chat);
-
-    chat.members.forEach((memberId) => {
+    chat.membersIds.forEach((memberId) => {
         const memberSocket = connections[memberId];
 
         if (memberSocket) {

@@ -8,15 +8,15 @@ export function buildMakeChat({Id}: makeChatDependencies) {
     return function makeChat({
                                  id = Id.makeId(),
                                  name = 'NoNameChat',
-                                 members = []
+                                 membersIds = []
                              } = {}) {
-        const clonedMembers = [...members];
+        const clonedMembersIds = [...membersIds];
 
         if (!id || !Id.isValidId(id)) {
             throw new Error('Chat must have a valid id.');
         }
 
-        if (clonedMembers.length && clonedMembers.some(memberId => !Id.isValidId(memberId))) {
+        if (clonedMembersIds.length && clonedMembersIds.some(memberId => !Id.isValidId(memberId))) {
             throw new Error('Some chat member id is not valid.');
         }
 
@@ -26,7 +26,7 @@ export function buildMakeChat({Id}: makeChatDependencies) {
             asPlainObject: () => Object.freeze({
                 id,
                 name,
-                members: Object.freeze(clonedMembers)
+                membersIds: Object.freeze(clonedMembersIds)
             })
         })
     }

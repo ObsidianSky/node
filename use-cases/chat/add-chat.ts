@@ -5,14 +5,14 @@ import makeChat from '../../entities/chat';
 
 interface AddChatArguments {
     name: string,
-    members: string[]
+    membersIds: string[]
 }
 
 export function buildAddChat(
     getDb: AsyncFunction<Db>
 ) {
-    return async function addChat({name, members} : AddChatArguments) {
-        const chat = makeChat({name, members});
+    return async function addChat({name, membersIds} : AddChatArguments) {
+        const chat = makeChat({name, membersIds});
 
         const db = await getDb();
 

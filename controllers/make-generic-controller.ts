@@ -14,6 +14,8 @@ export function makeGenericController(useCase: AsyncFunction) {
             }
         } catch (e) {
             console.log('GENERIC CONTROLLER ERROR');
+            console.log(e.message);
+
             return {
                 headers: {
                     'Content-Type': 'application/json'

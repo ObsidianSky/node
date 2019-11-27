@@ -14,31 +14,37 @@ export function buildGetChatList(getDb: AsyncFunction<Db>, Id: IdService) {
 
         return await chatCollection.aggregate([
             {
-                $match: {members: memberId}
+                $match: {membersIds: memberId}
             },
             {
                 $lookup: {
                     from: "users",
-                    let: {members: "$members"},
+                    let: {membersIds: "$membersIds"},
                     pipeline: [
                         {
                             $match:
                                 {
                                     $expr:
 
-                                        {$in: [ "$_id", "$$members" ]},
+                                        {$in: [ "$_id", "$$membersIds" ]},
 
 
                                 }
                         },
                         {
                             $project: { _id: 1, name: 1, email: 1 }
+                        },
+                        {
+                            $set: { id: "$_id"}
+                        },
+                        {
+                            $unset: "_id"
                         }
                     ],
-                    as: "author"
+                    as: "members"
                 }
             },
-            // { $unwind : "$author" }
+            { $unset : "membersIds" }
         ]).toArray();
 
         // return await chatCollection.find({members: memberId}).toArray();
