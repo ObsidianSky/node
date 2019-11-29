@@ -12,6 +12,7 @@ export function buildGetChatList(getDb: AsyncFunction<Db>, Id: IdService) {
         const db = await getDb();
         const chatCollection = db.collection('chats');
 
+        //todo pizdec prosto
         return await chatCollection.aggregate([
             {
                 $match: {membersIds: memberId}
@@ -24,27 +25,26 @@ export function buildGetChatList(getDb: AsyncFunction<Db>, Id: IdService) {
                         {
                             $match:
                                 {
-                                    $expr:
-
-                                        {$in: [ "$_id", "$$membersIds" ]},
-
-
+                                    $expr: {
+                                        $and: [ { $in: [ "$_id", "$$membersIds" ] }, { $not:  [ { $eq: ['$_id', memberId] } ] } ]
+                                    }
                                 }
                         },
                         {
-                            $project: { _id: 1, name: 1, email: 1 }
+                            $project: {_id: 1, name: 1, email: 1}
                         },
                         {
-                            $set: { id: "$_id"}
+                            $set: {id: "$_id"}
                         },
                         {
                             $unset: "_id"
                         }
                     ],
                     as: "members"
-                }
+                },
+
             },
-            { $unset : "membersIds" }
+            {$unset: "membersIds"}
         ]).toArray();
 
         // return await chatCollection.find({members: memberId}).toArray();

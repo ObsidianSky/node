@@ -1,6 +1,6 @@
 import { addMessage } from './use-cases/message';
 import message from './entities/message/message';
-import { getChat } from './use-cases/chat';
+import { getChat, getChatsList } from './use-cases/chat';
 import { getUser } from './use-cases/user';
 
 const express = require('express');
@@ -50,10 +50,55 @@ io.on('connection', async (socket) => {
     const user = await getUser({userId});
 
     socket.on('message', async data => {
-        console.log(data);
         await handleChatMessage(data.payload, user);
-    })
+    });
+
+    const chatList = await getChatsList({memberId: userId});
+
+    const allChatsMembers = chatList.reduce((accum, chat) => {
+        return accum.concat(chat.members.map(member => member.id));
+    }, []);
+
+    const uniqueChatMembers = Array.from(new Set(allChatsMembers));
+
+    notifyAboutOnline(uniqueChatMembers, connections, socket, userId);
+
+    socket.on('disconnect', () => {
+        notifyAboutOffline(uniqueChatMembers, connections, userId);
+        delete connections[userId];
+    });
 });
+
+function notifyAboutOnline(membersToCheck, connections, userSocket, userId) {
+    membersToCheck.forEach((memberId: string) => {
+        const memberSocket = connections[memberId];
+
+        if (memberSocket) {
+            userSocket.send('message', {
+                type: 'USER_ONLINE',
+                payload: memberId
+            });
+
+            memberSocket.send('message', {
+                type: 'USER_ONLINE',
+                payload: userId
+            })
+        }
+    });
+}
+
+function notifyAboutOffline(membersToCheck, connections, userId) {
+    membersToCheck.forEach((memberId: string) => {
+        const memberSocket = connections[memberId];
+
+        if (memberSocket) {
+            memberSocket.send('message', {
+                type: 'USER_OFFLINE',
+                payload: userId
+            })
+        }
+    });
+}
 
 // TODO bullshit
 async function handleChatMessage(data: {message: string, chatId: string}, user) {
