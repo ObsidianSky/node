@@ -13,7 +13,7 @@
     "express": "~4.16.1",
     "install": "^0.13.0",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.3.3",
+    "mongodb": "^3.3.5",
     "morgan": "~1.9.1",
     "npm": "^6.13.0",
     "socket.io": "^2.3.0"
